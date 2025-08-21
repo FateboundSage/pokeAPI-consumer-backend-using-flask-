@@ -1,0 +1,50 @@
+<!-- templates/pokemon_image.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{ name | capitalize }} — Image</title>
+
+  <!-- base/global styles (optional) -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+  <!-- page-specific styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='pokemon_image.css') }}">
+</head>
+<body>
+  <header class="pi-header">
+    <a href="{{ url_for('index') }}" class="pi-back">← Home</a>
+    <h1 class="pi-title">{{ name | capitalize }}</h1>
+  </header>
+
+  <main class="pi-main container">
+    <div class="viewer-wrap">
+      {% if image_url %}
+        <div class="viewer">
+          <img id="poke-img" src="{{ image_url }}" alt="{{ name }}" draggable="false">
+        </div>
+      {% else %}
+        <div class="viewer placeholder">
+          <div class="no-img">No image available</div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="controls">
+      <button id="zoom-in" title="Zoom in">＋</button>
+      <button id="zoom-out" title="Zoom out">−</button>
+      <button id="rotate" title="Rotate">⤾</button>
+      <button id="reset" title="Reset">Reset</button>
+      {% if image_url %}
+        <a id="download" href="{{ image_url }}" download="{{ name }}.png" title="Download">⬇</a>
+        <button id="fullscreen" title="Fullscreen">⤢</button>
+      {% endif %}
+    </div>
+
+    <p class="hint">Tip: use the zoom buttons or mouse wheel; drag to pan when zoomed.</p>
+  </main>
+
+  <script src="{{ url_for('static', filename='pokemon_image.js') }}"></script>
+</body>
+</html>

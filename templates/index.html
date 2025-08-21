@@ -1,0 +1,115 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pokédex</title>
+
+  <!-- Optional: Nice clean font; remove if you want pure system fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet" />
+
+  <!-- Main stylesheet (create static/styles.css) -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="theme-poke">
+  <!-- Decorative, CSS-only Pokéball background -->
+  <div class="bg-pokeball" aria-hidden="true"></div>
+
+  <!-- Top nav (kept minimal) -->
+  <header class="nav">
+    <a class="brand" href="{{ url_for('index') }}">
+      <!-- Simple inline Pokéball icon (kept tiny and light) -->
+      <svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2a10 10 0 0 0-9.46 7h5.23a4 4 0 0 1 7.46 0h5.23A10 10 0 0 0 12 2zm0 20a10 10 0 0 0 9.46-7h-5.23a4 4 0 0 1-7.46 0H2.54A10 10 0 0 0 12 22zm0-8a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
+      </svg>
+      <span>Pokédex</span>
+    </a>
+    <nav class="nav-links">
+      <!-- Using url_for instead of hardcoded links -->
+      <a href="{{ url_for('pokedex_page') }}">All Pokémon</a>
+      <a href="{{ url_for('legendary') }}">Legendary</a>
+      <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
+    </nav>
+  </header>
+
+  <!-- Hero section -->
+  <section class="hero container">
+    <h1 class="hero-title">Catch ’em all, stylishly.</h1>
+    <p class="hero-sub">
+      Search strengths, compare rivals, explore evolutions—your API, your Pokédex, your rules.
+    </p>
+
+    <!-- Quick search form (GET /search?pokemon=...) -->
+    <form class="search" action="{{ url_for('search') }}" method="get" autocomplete="off">
+      <!-- name="pokemon" matches your Flask route -->
+      <input
+        class="input"
+        type="text"
+        name="pokemon"
+        placeholder="Search Pokémon by name… (e.g., pikachu)"
+        aria-label="Search Pokémon by name"
+        required
+      />
+      <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+  </section>
+
+  <!-- Feature cards linking to your routes -->
+  <main class="container grid">
+    <!-- Card: All Pokémon -->
+    <a class="card" href="{{ url_for('pokedex_page') }}">
+      <div class="card-ico" aria-hidden="true">🧭</div>
+      <h3 class="card-title">All Pokémon</h3>
+      <p class="card-desc">Browse the full Pokédex returned by your API.</p>
+      <span class="card-cta">Open</span>
+    </a>
+
+    <!-- Card: Compare -->
+    <a class="card" href="{{ url_for('compare') }}">
+      <div class="card-ico" aria-hidden="true">⚔️</div>
+      <h3 class="card-title">Compare</h3>
+      <p class="card-desc">Head-to-head stats. Who wins the matchup?</p>
+      <span class="card-cta">Compare</span>
+    </a>
+
+    <!-- Card: Legendary -->
+    <a class="card" href="{{ url_for('legendary') }}">
+      <div class="card-ico" aria-hidden="true">🌟</div>
+      <h3 class="card-title">Legendary</h3>
+      <p class="card-desc">Explore legendary Pokémon curated by your API.</p>
+      <span class="card-cta">Explore</span>
+    </a>
+
+    <!-- Card: Leaderboard -->
+    <a class="card" href="{{ url_for('leaderboard') }}">
+      <div class="card-ico" aria-hidden="true">🏆</div>
+      <h3 class="card-title">Leaderboard</h3>
+      <p class="card-desc">Top contenders ranked. Who dominates?</p>
+      <span class="card-cta">View</span>
+    </a>
+
+    <!-- Card: Evolution -->
+    <a class="card" href="{{ url_for('evolution') }}">
+      <div class="card-ico" aria-hidden="true">🧬</div>
+      <h3 class="card-title">Evolution</h3>
+      <p class="card-desc">See evolution chains for your favorites.</p>
+      <span class="card-cta">Trace</span>
+    </a>
+
+    <!-- Card: Weakness -->
+    <a class="card" href="{{ url_for('weakness') }}">
+      <div class="card-ico" aria-hidden="true">🧪</div>
+      <h3 class="card-title">Weakness</h3>
+      <p class="card-desc">Check weaknesses to plan perfect counters.</p>
+      <span class="card-cta">Check</span>
+    </a>
+  </main>
+
+  <footer class="footer container">
+    <p>Built with ❤️ using Flask & your Pokédex API.</p>
+  </footer>
+</body>
+</html>

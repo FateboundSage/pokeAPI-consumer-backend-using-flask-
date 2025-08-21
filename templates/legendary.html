@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Legendary Pokémon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='legendary.css') }}">
+</head>
+<body>
+  <div class="legendary-container">
+    <h1 class="legendary-title">✨ Legendary Pokémon ✨</h1>
+
+    <div class="legendary-grid">
+      {% for pokemon in legendaries %}
+      <div class="legendary-card">
+        <img src="{{ pokemon['image'] }}" alt="{{ pokemon['name'] }}">
+        <h2>{{ pokemon['name'] }}</h2>
+        <p>Type: {{ pokemon['type'] }}</p>
+        <p class="special">⚡ Power Level: {{ pokemon['power'] }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</body>
+</html>

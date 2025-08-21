@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pokédex</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='pokedex.css') }}">
+</head>
+<body>
+  <div class="pokedex-container">
+    <h1 class="pokedex-title">Pokédex</h1>
+    <div class="pokedex-grid">
+      {% for pokemon in pokemons %}
+        <div class="pokemon-card">
+          <div class="card-inner">
+            <div class="card-front">
+              <img src="{{ pokemon.image_url }}" alt="{{ pokemon.name }}">
+              <h2>{{ pokemon.name }}</h2>
+            </div>
+            <div class="card-back">
+              <p><strong>Type:</strong> {{ pokemon.type }}</p>
+              <p><strong>HP:</strong> {{ pokemon.hp }}</p>
+              <p><strong>Attack:</strong> {{ pokemon.attack }}</p>
+              <p><strong>Defense:</strong> {{ pokemon.defense }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</body>
+</html>

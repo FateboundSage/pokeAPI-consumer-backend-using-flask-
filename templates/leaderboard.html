@@ -1,0 +1,90 @@
+<!-- templates/leaderboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Leaderboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='leaderboard.css') }}">
+</head>
+<body>
+  <div class="leaderboard-container">
+    <h1 class="leaderboard-title">🏆 Pokémon Leaderboard 🏆</h1>
+
+    {# --- Podium for Top 3 (uses first 3 items of `leaderboard`) --- #}
+    <div class="podium">
+      {% set first = leaderboard[0] if leaderboard|length > 0 else None %}
+      {% set second = leaderboard[1] if leaderboard|length > 1 else None %}
+      {% set third = leaderboard[2] if leaderboard|length > 2 else None %}
+
+      <!-- second (left) -->
+      <div class="podium-spot second" aria-hidden="{{ 'true' if not second else 'false' }}">
+        {% if second %}
+          <div class="rank">🥈</div>
+          <div class="pokemon-name">{{ second.name }}</div>
+          <div class="score">{{ second.score }} pts</div>
+        {% else %}
+          <div class="rank">🥈</div>
+          <div class="pokemon-name">-</div>
+          <div class="score">-</div>
+        {% endif %}
+      </div>
+
+      <!-- first (center) -->
+      <div class="podium-spot first" aria-hidden="{{ 'true' if not first else 'false' }}">
+        {% if first %}
+          <div class="rank">🥇</div>
+          <div class="pokemon-name">{{ first.name }}</div>
+          <div class="score">{{ first.score }} pts</div>
+        {% else %}
+          <div class="rank">🥇</div>
+          <div class="pokemon-name">-</div>
+          <div class="score">-</div>
+        {% endif %}
+      </div>
+
+      <!-- third (right) -->
+      <div class="podium-spot third" aria-hidden="{{ 'true' if not third else 'false' }}">
+        {% if third %}
+          <div class="rank">🥉</div>
+          <div class="pokemon-name">{{ third.name }}</div>
+          <div class="score">{{ third.score }} pts</div>
+        {% else %}
+          <div class="rank">🥉</div>
+          <div class="pokemon-name">-</div>
+          <div class="score">-</div>
+        {% endif %}
+      </div>
+    </div>
+
+    {# --- Other Rankings (everything after the top 3) --- #}
+    <div class="leaderboard-list">
+      {% if leaderboard and leaderboard|length > 3 %}
+        {% for item in leaderboard[3:] %}
+          <div class="leaderboard-card">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <img src="{{ item.sprite if item.sprite is defined else url_for('static', filename='placeholder.png') }}"
+                   alt="{{ item.name }}" style="width:48px; height:48px; object-fit:contain; border-radius:8px;">
+              <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                <div style="font-weight:700;">{{ item.name }}</div>
+                <div style="font-size:0.85rem; color:rgba(255,255,255,0.8);">
+                  {{ item.type if item.type is defined else '' }}
+                </div>
+              </div>
+            </div>
+            <div class="score" style="font-weight:700; color:#ffdd57;">
+              {{ item.score if item.score is defined else '0' }} pts
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        {# show a friendly message if there are no more entries #}
+        <div style="color:rgba(255,255,255,0.75); padding: 1rem; border-radius:8px;">
+          No additional leaderboard entries yet.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>

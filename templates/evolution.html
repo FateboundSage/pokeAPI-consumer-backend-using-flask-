@@ -1,0 +1,85 @@
+<!-- templates/evolution.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Evolution Chain</title>
+
+  <!-- keep global base styles if you want -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <!-- page-specific styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='evolution.css') }}">
+</head>
+<body>
+  <header class="ev-header">
+    <a class="ev-home" href="{{ url_for('index') }}">← Home</a>
+    <h1 class="ev-title">Evolution Chains</h1>
+  </header>
+
+  <main class="ev-main container">
+    <section class="ev-search">
+      <!-- uses your existing GET route /evolution?name=... -->
+      <form action="{{ url_for('evolution') }}" method="get" class="ev-form">
+        <input name="name" type="text" placeholder="Type Pokémon name (e.g. eevee)" value="{{ name or '' }}" required>
+        <button type="submit">Find chain</button>
+      </form>
+    </section>
+
+    {% if not_found %}
+      <div class="ev-empty">No evolution chain found for <strong>{{ name }}</strong>. Try another name.</div>
+    {% endif %}
+
+    {% if chain %}
+      <!-- Evolution timeline -->
+      <section class="ev-timeline" aria-label="Evolution chain">
+        {# The template is defensive: supports:
+           - chain as a list of stage objects: [{name:, image:, ...}, ...]
+           - chain as a list of stages where each stage is a list (branching): [[{...}, {...}], [{...}], ...]
+           - each pokemon object should ideally contain 'name' and 'image' or 'sprite' keys #}
+
+        {% set idx = 0 %}
+        {% for stage in chain %}
+          <div class="ev-stage">
+            {% if stage.name is defined %}
+              <!-- single pokemon object in this stage -->
+              <a class="ev-node" href="{{ url_for('pokemon_image', name=stage.name) }}">
+                <div class="ev-node-img-wrap">
+                  <img class="ev-node-img" src="{{ stage.image if stage.image is defined else (stage.sprite if stage.sprite is defined else url_for('static', filename='placeholder.png')) }}" alt="{{ stage.name }}">
+                </div>
+                <div class="ev-node-name">{{ stage.name }}</div>
+              </a>
+            {% else %}
+              <!-- stage is likely a list (branching evolutions) -->
+              <div class="ev-branch">
+                {% for p in stage %}
+                  <a class="ev-node" href="{{ url_for('pokemon_image', name=(p.name if p.name is defined else p['name'])) }}">
+                    <div class="ev-node-img-wrap">
+                      <img class="ev-node-img" src="{{ p.image if p.image is defined else (p.sprite if p.sprite is defined else url_for('static', filename='placeholder.png')) }}" alt="{{ p.name if p.name is defined else p['name'] }}">
+                    </div>
+                    <div class="ev-node-name">{{ p.name if p.name is defined else p['name'] }}</div>
+                  </a>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            {# show connector arrow if not last stage #}
+            {% if not loop.last %}
+              <div class="ev-connector" aria-hidden="true">
+                <svg viewBox="0 0 100 24" preserveAspectRatio="none" class="ev-arrow">
+                  <path d="M2 12 L78 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+                  <path d="M70 6 L78 12 L70 18" fill="currentColor"/>
+                </svg>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </section>
+    {% else %}
+      <div class="ev-hint">
+        Enter a Pokémon name above and press <strong>Find chain</strong>. If your API returns the evolution chain, it will appear here with animations.
+      </div>
+    {% endif %}
+  </main>
+</body>
+</html>
